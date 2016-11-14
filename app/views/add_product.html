@@ -103,12 +103,60 @@
                <label  >Terms and Conditions</label>
                <textarea ng-model ="terms_and_conditions" class="col-md-8 form-control" rows="3" style="min-height:60px;" placeholder="Enter Terms And Conditions"></textarea>
           </div>
+          </div>
 
+          <!-- product location -->
+          <div class="col-md-12" style="padding:0px;">
+            <div class="panel panel-default">
+              <div class="panel-heading  clearfix">
+                <div class="panel-title">
+                  <a href="javascript:void(0)" data-toggle="collapse">
+                    <b>Location</b>
+                  </a>
+                </div>
+              </div>
+              <div id="id-location" class="collapse in">
+                <div class="row in-inner" style="padding-bottom:10px;margin:10px 20px;">
+                  <ui-select ng-model="address.selected" theme="bootstrap" append-to-body="true" reset-search-input="false">
+                    <ui-select-match>{{$select.selected.formatted_address}}</ui-select-match>
+                    <ui-select-choices repeat="address in addresses track by $index" refresh="refreshAddresses($select.search)" refresh-delay="0">
+                      <div ng-bind-html="address.formatted_address"></div>
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
+                <div style="padding: 20px" ng-show="address.selected" class="row in-inner">
+                  <product-location place="create-event" locations="[address.selected]" title=""></product-location>
+                </div>
+                <div class="row in-inner">
+                  <label class="col-md-2 form-group">Street number</label>
+                  <input type="text" ng-model="streetNumber" class="col-md-8 form-cont product_info_input" placeholder="Street number"/>
+                </div>
+                <div class="row in-inner">
+                  <label class="col-md-2 form-group">Street name</label>
+                  <input type="text" ng-model="streetName" class="col-md-8 form-cont product_info_input" placeholder="Street name"/>
+                </div>
+                <div class="row in-inner">
+                  <label class="col-md-2 form-group">City</label>
+                  <input type="text" ng-model="city" class="col-md-8 form-cont product_info_input" placeholder="City"/>
+                </div>
+                <div class="row in-inner">
+                  <label class="col-md-2 form-group">State</label>
+                  <input type="text" ng-model="state" class="col-md-8 form-cont product_info_input" placeholder="State"/>
+                </div>
+                <div class="row in-inner">
+                  <label class="col-md-2 form-group">Country</label>
+                  <input type="text" ng-model="country" class="col-md-8 form-cont product_info_input" placeholder="Country"/>
+                </div>
+                <div class="row in-inner">
+                  <label class="col-md-2 form-group">Zipcode</label>
+                  <input type="text" ng-model="zipcode" class="col-md-8 form-cont product_info_input" placeholder="Zipcode"/>
+                </div>
+              </div>
+            </div>
+					</div>
+          <!-- product location -->
 
-
-
-  					</div>
-  				</div>
+  				
   				<!--product-info-->
           	<div class="col-md-12" style="padding:0px;">
   					<!--Pricing-->

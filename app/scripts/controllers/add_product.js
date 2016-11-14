@@ -372,5 +372,46 @@ angular.module('ecommercesellerApp')
       }
     }
 
+    $scope.addresses = [];
+    $scope.refreshAddresses = function(address) {
+      if (address.trim().length > 0) {
+        var params = {address: address, sensor: false};
+        return $http.get(
+          'http://maps.googleapis.com/maps/api/geocode/json',
+          {params: params}
+        ).then( (response) => {
+          $scope.addresses = response.data.results;
+        });
+      }
+    };
+
+    $scope.address = {};
+    $scope.$watch('address.selected', (nv) => {
+      // when selected address we initial its to location
+      if (nv) {
+        _.each(nv.address_components, (item) => {
+          $scope.streetNumber, $scope.streetName, $scope.city, $scope.state, $scope.country, $scope.zipcode = '';
+          if (item.types[0]==='street_number') {
+            $scope.streetNumber = item.long_name;
+          }
+          if (item.types[0]==='route') {
+            $scope.streetName = item.long_name;
+          }
+          if (item.types[0]==='country') {
+            $scope.country = item.long_name;
+          }
+          if (item.types[0]==='administrative_area_level_1') {
+            $scope.state = item.long_name;
+          }
+          if (item.types[0]==='administrative_area_level_2' || item.types[0]==='locality') {
+            $scope.city = item.long_name;
+          }
+          if (item.types[0]==='postal_code') {
+            $scope.zipcode = item.long_name;
+          }
+        });
+      }
+    }, true);
+
 
   }]);
