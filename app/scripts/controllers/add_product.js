@@ -298,7 +298,7 @@ angular.module('ecommercesellerApp')
           headers: {
               'Authorization':authorization
           },
-          data: {"source":$scope.source,"product_videos":$scope.video_url,"type":type,"licenses":license_new,"pricing":pricing_new,"terms_and_conditions":$scope.terms_and_conditions,"long_description":$scope.long_description,"meta":$scope.meta,"unit":$scope.unit,"images":$scope.images,"variants":variant_quantity,"quantity":$scope.quantity,"title":$scope.name,"name":$scope.name,"category":$scope.cat,"subcategory":$scope.sub_cat,'description':$scope.description,"sku":$scope.sku,"price":$scope.main_price,"selling_price":$scope.selling_price,"commission":$scope.commision,"service_tax":$scope.service_tax,"weight":$scope.weight,"shipping_fee":$scope.shipping_fee,"ship_duration":$scope.ship_duration,"paid_by":$scope.paid_by}
+          data: {"source":$scope.source,"product_videos":$scope.video_url,"type":type,"licenses":license_new,"pricing":pricing_new,"terms_and_conditions":$scope.terms_and_conditions,"long_description":$scope.long_description,"meta":$scope.meta,"unit":$scope.unit,"images":$scope.images,"variants":variant_quantity,"quantity":$scope.quantity,"title":$scope.name,"name":$scope.name,"category":$scope.cat,"subcategory":$scope.sub_cat,'description':$scope.description,"sku":$scope.sku,"price":$scope.main_price,"selling_price":$scope.selling_price,"commission":$scope.commision,"service_tax":$scope.service_tax,"weight":$scope.weight,"shipping_fee":$scope.shipping_fee,"ship_duration":$scope.ship_duration,"paid_by":$scope.paid_by, streetNumber: $scope.streetNumber, streetName: $scope.streetName, city: $scope.city, state: $scope.state, country: $scope.country, zipcode: $scope.zipcode, lat: $scope.lat, lng: $scope.lng}
         }
         $http(req).success(function(data){
             if(data.status =="success"){
@@ -409,6 +409,8 @@ angular.module('ecommercesellerApp')
           if (item.types[0]==='postal_code') {
             $scope.zipcode = item.long_name;
           }
+          $scope.lat = nv.geometry.location.lat;
+          $scope.lng = nv.geometry.location.lng;
         });
       }
     }, true);
