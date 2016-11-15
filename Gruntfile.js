@@ -77,7 +77,7 @@ module.exports = function (grunt) {
         // livereload: 35700
 
         // development mode
-        port: 9000,
+        port: 9100,
         hostname: 'localhost',
         livereload: 35800
       },
