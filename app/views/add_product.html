@@ -48,14 +48,10 @@
   							</a>
   						</div>
   					</div>
-
-
   					<div id="id" class="collapse in">
   						<div class="row in-inner">
-
   							<label class="col-md-2 form-group required">Name</label>
   							<input type="text" minlength="3" required ng-model ="name" class="col-md-8 form-cont product_info_input" placeholder="Enter Product Name"/>
-
               </div>
   						<div class="row in-inner">
   							<label class="col-md-2 form-group required">Category</label>
@@ -64,31 +60,25 @@
   								<option ng-repeat ="cat in category track by $index"  value="{{cat._id}}">{{cat.name}}</option>
   							</select>
   						</div>
-               <div class="row in-inner" ng-show="subcategory_visible">
+              <div class="row in-inner" ng-show="subcategory_visible">
   							<label class="col-md-2 form-group required">Sub Category</label>
   							<select ng-model="sub_cat" class="col-md-3 form-cont product_info_input" >
-  									<option value="">Select</option>
+									<option value="">Select</option>
   								<option ng-repeat ="sub in subcategory[0].children"  value="{{sub._id}}">{{sub.name}}</option>
   							</select>
   						</div>
-
-
   						<div class="row in-inner">
-
-
   							<label class="col-md-2 form-group required">Short Description</label>
   							<textarea required maxlength="200" ng-trim="false" ng-model ="description" class="col-md-8 form-cont product_info_input" rows="5" style="min-height:60px;" placeholder="Enter Product Description"></textarea><br/><br/><br/>
                 <p class="remaining" style="margin: 5px 17%;margin-bottom: 0px;">{{200 - description.length}} characters remaining</p>
 
   							<div class="col-md-12" >
   								<div class="row in-inner">
-
   									<label class="col-md-12 form-group"><span class="required">Quantity</span><br/>
                       <p class="q_description">- The Total number of products you have in stock.<br/>
                       - The inventory will be auto-updated as sales happens
                     </p>
                     </label>
-
   									<input type="number" min="1" required ng-model ="quantity" class="col-md-4 form-cont product_info_input" placeholder="Quantity" style="margin-left:21px;"/>
   								</div>
   							</div>
@@ -97,13 +87,15 @@
               <div class="row in-inner" style="padding-bottom:0px;">
                 <label class="col-md-3 form-group long_description" >Long Description</label></br>
                 <p class="sample_product">( Check a sample Product page HERE )</p>
-                  <div ckeditor="options" ng-model="long_description" ready="onReady()"></div>
-             </div>
-             <div class="row in-inner" style="padding-bottom:10px;margin:10px 20px;">
-               <label  >Terms and Conditions</label>
-               <textarea ng-model ="terms_and_conditions" class="col-md-8 form-control" rows="3" style="min-height:60px;" placeholder="Enter Terms And Conditions"></textarea>
+                <div ckeditor="options" ng-model="long_description" ready="onReady()"></div>
+              </div>
+              <div class="row in-inner" style="padding-bottom:10px;margin:10px 20px;">
+                <label  >Terms and Conditions</label>
+                <textarea ng-model ="terms_and_conditions" class="col-md-8 form-control" rows="3" style="min-height:60px;" placeholder="Enter Terms And Conditions"></textarea>
+              </div>
+            </div>
           </div>
-          </div>
+          <!--product-info-->
 
           <!-- product location -->
           <div class="col-md-12" style="padding:0px;">
@@ -157,7 +149,7 @@
           <!-- product location -->
 
   				
-  				<!--product-info-->
+  				
           	<div class="col-md-12" style="padding:0px;">
   					<!--Pricing-->
             <div class="panel panel-default">

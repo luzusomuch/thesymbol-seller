@@ -258,6 +258,19 @@ var configurations = url +'api/v1/admin/settings';
             $scope.product_details.categories.forEach(function(item){
             $scope.product_details.selected_categories.push(item._id);
 
+            if ($scope.product_details.coordinates) {
+              $scope.address = {
+                selected: {
+                  geometry: {
+                    location: {
+                      lng: $scope.product_details.coordinates[0],
+                      lat: $scope.product_details.coordinates[1]
+                    }
+                  },
+                }
+              }
+            }
+
 
 
             })
@@ -373,7 +386,16 @@ var configurations = url +'api/v1/admin/settings';
                   "weight":$scope.product_details.shipping_details.weight,
                   "shipping_fee":$scope.shipping_fee,
                   "ship_duration":$scope.ship_duration,
-                  "paid_by":$scope.paid_by
+                  "paid_by":$scope.paid_by,
+                  streetNumber: $scope.product_details.streetNumber, 
+                  streetName: $scope.product_details.streetName, 
+                  city: $scope.product_details.city, 
+                  state: $scope.product_details.state, 
+                  country: $scope.product_details.country, 
+                  zipcode: $scope.product_details.zipcode, 
+                  lat: $scope.product_details.lat, 
+                  lng: $scope.product_details.lng, 
+                  primesubscription: $scope.product_details.primesubscription
                 }
         }
         $http(req).success(function(data){
@@ -490,6 +512,50 @@ var configurations = url +'api/v1/admin/settings';
          });
 
      }
+
+    $scope.addresses = [];
+    $scope.refreshAddresses = function(address) {
+      if (address.trim().length > 0) {
+        var params = {address: address, sensor: false};
+        return $http.get(
+          'http://maps.googleapis.com/maps/api/geocode/json',
+          {params: params}
+        ).then( (response) => {
+          $scope.addresses = response.data.results;
+        });
+      }
+    };
+
+    $scope.address = {};
+    $scope.$watch('address.selected', (nv) => {
+      // when selected address we initial its to location
+      if (nv) {
+        _.each(nv.address_components, (item) => {
+          $scope.streetNumber, $scope.streetName, $scope.city, $scope.state, $scope.country, $scope.zipcode = '';
+          if (item.types[0]==='street_number') {
+            $scope.product_details.streetNumber = item.long_name;
+          }
+          if (item.types[0]==='route') {
+            $scope.product_details.streetName = item.long_name;
+          }
+          if (item.types[0]==='country') {
+            $scope.product_details.country = item.long_name;
+          }
+          if (item.types[0]==='administrative_area_level_1') {
+            $scope.product_details.state = item.long_name;
+          }
+          if (item.types[0]==='administrative_area_level_2' || item.types[0]==='locality') {
+            $scope.product_details.city = item.long_name;
+          }
+          if (item.types[0]==='postal_code') {
+            $scope.product_details.zipcode = item.long_name;
+          }
+          $scope.product_details.lat = nv.geometry.location.lat;
+          $scope.product_details.lng = nv.geometry.location.lng;
+        });
+      }
+    }, true);
+
   }]).directive('fileModel', ['$parse', function ($parse) {
               return {
                  restrict: 'A',
