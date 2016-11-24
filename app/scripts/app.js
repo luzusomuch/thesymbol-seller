@@ -34,6 +34,7 @@ angular
 
   // localhost
   // .constant('url', 'http://localhost:3000/')
+  
   .constant('user_url','http://www.thesymbol.store/')
   .constant('sellers','api/v1/sellers/')
   .constant('sellers_url','http://seller.thesymbol.store/')

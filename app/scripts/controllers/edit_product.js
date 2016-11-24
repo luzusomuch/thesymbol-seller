@@ -268,7 +268,9 @@ var configurations = url +'api/v1/admin/settings';
                     }
                   },
                 }
-              }
+              };
+              $scope.product_details.lng = $scope.product_details.coordinates[0];
+              $scope.product_details.lat = $scope.product_details.coordinates[1];
             }
 
 
