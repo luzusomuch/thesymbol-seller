@@ -76,10 +76,15 @@ module.exports = function (grunt) {
         // hostname: '0.0.0.0',
         // livereload: 35700
 
-        // development mode
+        // test server env
         port: 9100,
-        hostname: 'localhost',
+        hostname: '104.236.38.133',
         livereload: 35800
+
+        // development mode
+        // port: 9100,
+        // hostname: 'localhost',
+        // livereload: 35800
       },
       livereload: {
         options: {

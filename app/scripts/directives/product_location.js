@@ -1,10 +1,5 @@
 'use strict';
-
-class ProductLocationCtrl {
-	constructor() {}
-}
-
-angular.module('ecommercesellerApp').directive('productLocation', ($interval) => {
+angular.module('ecommercesellerApp').directive('productLocation', function($interval) {
 	return {
 		restrict: 'E',
 		scope: {
@@ -35,7 +30,7 @@ angular.module('ecommercesellerApp').directive('productLocation', ($interval) =>
 	      	}
 	      	var bounds = new google.maps.LatLngBounds();
 	      	_.each(locations, function(location) {
-	      		let pos = (typeof location === 'object' &&  location.coordinates)? location.coordinates : null;
+	      		var pos = (typeof location === 'object' &&  location.coordinates)? location.coordinates : null;
 	      		if(pos) {
 	      			var latLng = new google.maps.LatLng(pos[1], pos[0]);
 			        var marker = new google.maps.Marker({
@@ -59,18 +54,18 @@ angular.module('ecommercesellerApp').directive('productLocation', ($interval) =>
 					}
 	      }
 	    };
-	    scope.$watch('locations', (nv) => {
+	    scope.$watch('locations', function(nv) {
     		for(var i=0; i< markers.length; i++) {
     			markers[i].setMap(null);
     		}
     		markers = [];
 	    	if (nv && nv[0]) {
-		    	var $ttl = $interval(() => {
+		    	var $ttl = $interval(function() {
 		    		if(window.google && window.google.maps) {
 		    			$interval.cancel($ttl);
 		    			google = window.google;
 		    			if (scope.place==='create-event') {
-		    				let data = [{
+		    				var data = [{
 		    					coordinates: [nv[0].geometry.location.lng, nv[0].geometry.location.lat],
 		    					fullAddress: nv[0].formatted_address
 		    				}];
@@ -84,4 +79,4 @@ angular.module('ecommercesellerApp').directive('productLocation', ($interval) =>
 	    });
 		}
 	};
-}).controller('ProductLocationCtrl', ProductLocationCtrl);
+}).controller('ProductLocationCtrl', function(){});

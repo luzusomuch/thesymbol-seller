@@ -26,8 +26,14 @@ angular
     'ui.bootstrap.datetimepicker',
     'ui.select'
   ])
+  // production mode
   // .constant('url', 'http://104.236.48.110:3000/')
-  .constant('url', 'http://localhost:3000/')
+
+  // test mode
+  .constant('url', 'http://104.236.38.133:3000/')
+
+  // localhost
+  // .constant('url', 'http://localhost:3000/')
   .constant('user_url','http://www.thesymbol.store/')
   .constant('sellers','api/v1/sellers/')
   .constant('sellers_url','http://seller.thesymbol.store/')

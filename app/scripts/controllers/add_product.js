@@ -17,7 +17,7 @@ angular.module('ecommercesellerApp')
     var license_url = url +'api/v1/licenses/';
     var primesubscriptionData_url = url + 'api/v1/primesubscriptions';
 
-    $http.get(primesubscriptionData_url).success(resp => {
+    $http.get(primesubscriptionData_url).success(function(resp) {
       $scope.primesubscriptionData = resp.response[0];
     });
 
@@ -420,17 +420,17 @@ angular.module('ecommercesellerApp')
         return $http.get(
           'http://maps.googleapis.com/maps/api/geocode/json',
           {params: params}
-        ).then( (response) => {
+        ).then( function(response) {
           $scope.addresses = response.data.results;
         });
       }
     };
 
     $scope.address = {};
-    $scope.$watch('address.selected', (nv) => {
+    $scope.$watch('address.selected', function(nv) {
       // when selected address we initial its to location
       if (nv) {
-        _.each(nv.address_components, (item) => {
+        _.each(nv.address_components, function(item) {
           $scope.streetNumber, $scope.streetName, $scope.city, $scope.state, $scope.country, $scope.zipcode = '';
           if (item.types[0]==='street_number') {
             $scope.streetNumber = item.long_name;

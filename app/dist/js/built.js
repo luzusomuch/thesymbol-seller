@@ -24,11 +24,19 @@ angular
     'uiSwitch',
     'ui.bootstrap',
     'ui.bootstrap.datetimepicker',
+    'ui.select'
   ])
-  .constant('url', 'http://e-commerce-api.mybluemix.net/')
-  .constant('user_url','http://e-commerce-prime.mybluemix.net/')
+  // production mode
+  // .constant('url', 'http://104.236.48.110:3000/')
+
+  // test mode
+  .constant('url', 'http://104.236.38.133:3000/')
+
+  // localhost
+  // .constant('url', 'http://localhost:3000/')
+  .constant('user_url','http://www.thesymbol.store/')
   .constant('sellers','api/v1/sellers/')
-  .constant('sellers_url','http://e-commerce-prime-seller.mybluemix.net/')
+  .constant('sellers_url','http://seller.thesymbol.store/')
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -307,6 +315,12 @@ angular.module('ecommercesellerApp')
     var configurations = url +'api/v1/admin/settings';
     var cropped_url =url +'api/v1/images/upload-single-image';
     var license_url = url +'api/v1/licenses/';
+    var primesubscriptionData_url = url + 'api/v1/primesubscriptions';
+
+    $http.get(primesubscriptionData_url).success(function(resp) {
+      $scope.primesubscriptionData = resp.response[0];
+    });
+
     $('#cropped').prop('disabled', true);
 
     $scope.price_add_subtract =false;
@@ -590,7 +604,42 @@ angular.module('ecommercesellerApp')
           headers: {
               'Authorization':authorization
           },
-          data: {"source":$scope.source,"product_videos":$scope.video_url,"type":type,"licenses":license_new,"pricing":pricing_new,"terms_and_conditions":$scope.terms_and_conditions,"long_description":$scope.long_description,"meta":$scope.meta,"unit":$scope.unit,"images":$scope.images,"variants":variant_quantity,"quantity":$scope.quantity,"title":$scope.name,"name":$scope.name,"category":$scope.cat,"subcategory":$scope.sub_cat,'description':$scope.description,"sku":$scope.sku,"price":$scope.main_price,"selling_price":$scope.selling_price,"commission":$scope.commision,"service_tax":$scope.service_tax,"weight":$scope.weight,"shipping_fee":$scope.shipping_fee,"ship_duration":$scope.ship_duration,"paid_by":$scope.paid_by}
+          data: {
+            "source":$scope.source,
+            "product_videos":$scope.video_url,
+            "type":type,
+            "licenses":license_new,
+            "pricing":pricing_new,
+            "terms_and_conditions":$scope.terms_and_conditions,
+            "long_description":$scope.long_description,
+            "meta":$scope.meta,
+            "unit":$scope.unit,
+            "images":$scope.images,
+            "variants":variant_quantity,
+            "quantity":$scope.quantity,
+            "title":$scope.name,
+            "name":$scope.name,
+            "category":$scope.cat,
+            "subcategory":$scope.sub_cat,
+            'description':$scope.description,
+            "sku":$scope.sku,
+            "price":$scope.main_price,
+            "selling_price":$scope.selling_price,
+            "commission":$scope.commision,
+            "service_tax":$scope.service_tax,
+            "weight":$scope.weight,
+            "shipping_fee":$scope.shipping_fee,
+            "ship_duration":$scope.ship_duration,
+            "paid_by":$scope.paid_by, 
+            streetNumber: $scope.streetNumber, 
+            streetName: $scope.streetName, 
+            city: $scope.city, 
+            state: $scope.state, 
+            country: $scope.country, 
+            zipcode: $scope.zipcode, 
+            lat: $scope.lat, 
+            lng: $scope.lng, 
+            primesubscription: $scope.primesubscription}
         }
         $http(req).success(function(data){
             if(data.status =="success"){
@@ -663,6 +712,49 @@ angular.module('ecommercesellerApp')
         calculate_selection[$index].savings =savings;
       }
     }
+
+    $scope.addresses = [];
+    $scope.refreshAddresses = function(address) {
+      if (address.trim().length > 0) {
+        var params = {address: address, sensor: false};
+        return $http.get(
+          'http://maps.googleapis.com/maps/api/geocode/json',
+          {params: params}
+        ).then( function(response) {
+          $scope.addresses = response.data.results;
+        });
+      }
+    };
+
+    $scope.address = {};
+    $scope.$watch('address.selected', function(nv) {
+      // when selected address we initial its to location
+      if (nv) {
+        _.each(nv.address_components, function(item) {
+          $scope.streetNumber, $scope.streetName, $scope.city, $scope.state, $scope.country, $scope.zipcode = '';
+          if (item.types[0]==='street_number') {
+            $scope.streetNumber = item.long_name;
+          }
+          if (item.types[0]==='route') {
+            $scope.streetName = item.long_name;
+          }
+          if (item.types[0]==='country') {
+            $scope.country = item.long_name;
+          }
+          if (item.types[0]==='administrative_area_level_1') {
+            $scope.state = item.long_name;
+          }
+          if (item.types[0]==='administrative_area_level_2' || item.types[0]==='locality') {
+            $scope.city = item.long_name;
+          }
+          if (item.types[0]==='postal_code') {
+            $scope.zipcode = item.long_name;
+          }
+          $scope.lat = nv.geometry.location.lat;
+          $scope.lng = nv.geometry.location.lng;
+        });
+      }
+    }, true);
 
 
   }]);
@@ -1274,6 +1366,19 @@ var configurations = url +'api/v1/admin/settings';
             $scope.product_details.categories.forEach(function(item){
             $scope.product_details.selected_categories.push(item._id);
 
+            if ($scope.product_details.coordinates) {
+              $scope.address = {
+                selected: {
+                  geometry: {
+                    location: {
+                      lng: $scope.product_details.coordinates[0],
+                      lat: $scope.product_details.coordinates[1]
+                    }
+                  },
+                }
+              }
+            }
+
 
 
             })
@@ -1389,7 +1494,16 @@ var configurations = url +'api/v1/admin/settings';
                   "weight":$scope.product_details.shipping_details.weight,
                   "shipping_fee":$scope.shipping_fee,
                   "ship_duration":$scope.ship_duration,
-                  "paid_by":$scope.paid_by
+                  "paid_by":$scope.paid_by,
+                  streetNumber: $scope.product_details.streetNumber, 
+                  streetName: $scope.product_details.streetName, 
+                  city: $scope.product_details.city, 
+                  state: $scope.product_details.state, 
+                  country: $scope.product_details.country, 
+                  zipcode: $scope.product_details.zipcode, 
+                  lat: $scope.product_details.lat, 
+                  lng: $scope.product_details.lng, 
+                  primesubscription: $scope.product_details.primesubscription
                 }
         }
         $http(req).success(function(data){
@@ -1506,6 +1620,50 @@ var configurations = url +'api/v1/admin/settings';
          });
 
      }
+
+    $scope.addresses = [];
+    $scope.refreshAddresses = function(address) {
+      if (address.trim().length > 0) {
+        var params = {address: address, sensor: false};
+        return $http.get(
+          'http://maps.googleapis.com/maps/api/geocode/json',
+          {params: params}
+        ).then( function(response) {
+          $scope.addresses = response.data.results;
+        });
+      }
+    };
+
+    $scope.address = {};
+    $scope.$watch('address.selected', function(nv) {
+      // when selected address we initial its to location
+      if (nv) {
+        _.each(nv.address_components, function(item) {
+          $scope.streetNumber, $scope.streetName, $scope.city, $scope.state, $scope.country, $scope.zipcode = '';
+          if (item.types[0]==='street_number') {
+            $scope.product_details.streetNumber = item.long_name;
+          }
+          if (item.types[0]==='route') {
+            $scope.product_details.streetName = item.long_name;
+          }
+          if (item.types[0]==='country') {
+            $scope.product_details.country = item.long_name;
+          }
+          if (item.types[0]==='administrative_area_level_1') {
+            $scope.product_details.state = item.long_name;
+          }
+          if (item.types[0]==='administrative_area_level_2' || item.types[0]==='locality') {
+            $scope.product_details.city = item.long_name;
+          }
+          if (item.types[0]==='postal_code') {
+            $scope.product_details.zipcode = item.long_name;
+          }
+          $scope.product_details.lat = nv.geometry.location.lat;
+          $scope.product_details.lng = nv.geometry.location.lng;
+        });
+      }
+    }, true);
+
   }]).directive('fileModel', ['$parse', function ($parse) {
               return {
                  restrict: 'A',
@@ -2605,6 +2763,88 @@ angular.module('ecommercesellerApp')
     };
   });
 
+'use strict';
+angular.module('ecommercesellerApp').directive('productLocation', function($interval) {
+	return {
+		restrict: 'E',
+		scope: {
+			locations : '=',
+			title: '@',
+			center: '=',
+			place: '@'
+		},
+		templateUrl: 'views/product-location.html',
+		controller: 'ProductLocationCtrl',
+		controllerAs: 'ProductLocation',
+		replace: true,
+		link: function(scope, elm) {
+			scope.address = '';
+			var map, google;
+	    var mapElm = angular.element(elm).find('.event-map');
+	    var markers = [];
+	    var initMap = function(locations, center) {
+	    	center = center || {lat: 52.511, lng: 13.447};
+	      map = new google.maps.Map(mapElm[0], {
+	        center: center,
+	        zoom: 5
+	      });
+	      var resize = false;
+	      if(typeof locations === 'object' && locations.length) {
+	      	if(locations.length === 1 && locations[0].fullAddress) {
+	      		scope.address = locations[0].fullAddress;
+	      	}
+	      	var bounds = new google.maps.LatLngBounds();
+	      	_.each(locations, function(location) {
+	      		var pos = (typeof location === 'object' &&  location.coordinates)? location.coordinates : null;
+	      		if(pos) {
+	      			var latLng = new google.maps.LatLng(pos[1], pos[0]);
+			        var marker = new google.maps.Marker({
+			            map: map,
+			            position: latLng
+			        });
+			        markers.push(marker);
+			        bounds.extend(latLng);
+			        resize = true;
+		        }
+	        });
+	        if(resize) {
+		        map.setCenter(bounds.getCenter());
+						map.fitBounds(bounds);
+						var listener = google.maps.event.addListener(map, 'idle', function() { 
+						  if (map.getZoom() > 15) { 
+						  	map.setZoom(15); 
+						  } 
+						  google.maps.event.removeListener(listener);
+						});
+					}
+	      }
+	    };
+	    scope.$watch('locations', function(nv) {
+    		for(var i=0; i< markers.length; i++) {
+    			markers[i].setMap(null);
+    		}
+    		markers = [];
+	    	if (nv && nv[0]) {
+		    	var $ttl = $interval(function() {
+		    		if(window.google && window.google.maps) {
+		    			$interval.cancel($ttl);
+		    			google = window.google;
+		    			if (scope.place==='create-event') {
+		    				var data = [{
+		    					coordinates: [nv[0].geometry.location.lng, nv[0].geometry.location.lat],
+		    					fullAddress: nv[0].formatted_address
+		    				}];
+		    				initMap(data, scope.center);
+		    			} else {
+		    				initMap(nv, scope.center);
+		    			}
+		    		}
+		    	}, 250);
+	    	}
+	    });
+		}
+	};
+}).controller('ProductLocationCtrl', function(){});
 ;!function(e,i,t,n){var a=function(i,t){this.$element=i,this.defaults={width:"200px",height:"200px",backgroundSize:"cover",fontSize:"16px",borderRadius:"5px",border:"0",lang:"zh-cn"},this.options=e.extend({},this.defaults,t)};a.prototype={preview:function(){return o({$element:this.$element,width:this.options.width,height:this.options.height,backgroundSize:this.options.backgroundSize,fontSize:this.options.fontSize,borderRadius:this.options.borderRadius,border:this.options.border,lang:this.options.lang}),r(this.$element,this.$element.children("input")),this.$element}};var o=function(i){switch(i.lang){case"zh-cn":i.$element.append('<span>点击选择图片</span><div class="up_again">点击重新<br>选择图片</div>');break;case"en":i.$element.append('<span>click to choose a pic</span><div class="up_again">click again<br>to choose another</div>');break;default:i.$element.append('<span>click here to choose pic</span><div class="up_again">click again<br>choose pic</div>')}var t=i.$element.attr("class").trim(),n=t.indexOf(" ");-1!==n&&(t=t.substr(0,n)),e("head").append("<style>."+t+" { font-size: "+i.fontSize+"; width: "+i.width+"; height: "+i.height+"; border-radius: "+i.borderRadius+";border: "+i.border+"; position: relative; overflow: hidden; background-color: #eee; background-size: "+i.backgroundSize+"; background-repeat: no-repeat; background-position: center; -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);}."+t+" span { display: block; padding: 0; line-height: "+i.height+"; text-align: center; }."+t+' input { position: absolute; font-size: 2000px; z-index: 200; top: 0; right: 0; opacity: 0; -ms-filter: "alpha(opacity=0)"; cursor: pointer; }.'+t+" .up_again { display: table-cell; vertical-align: middle; text-align: center; width: "+i.width+"; height: "+i.height+"; opacity: 0; color: #fff; transition: 0.3s ease-in-out; -moz-transition: 0.3s ease-in-out; -webkit-transition: 0.3s ease-in-out; -o-transition: 0.3s ease-in-out; line-height: 1.6; }."+t+":hover .up_again { opacity: 1; background: rgba(0, 0, 0, 0.5); }</style>")},s=function(i,t){if(t.files&&t.files[0]){var n=new FileReader;n.onload=function(e){i.css("background-image","url("+e.target.result+")")},n.readAsDataURL(t.files[0]),e(t).next("span").hide()}},r=function(e,i){i.change(function(){s(e,this)})};e.fn.uploadPreview=function(e){var i=new a(this,e);return i.preview()}}(jQuery,window,document);
 
 'use strict';

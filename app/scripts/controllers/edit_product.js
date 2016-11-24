@@ -520,17 +520,17 @@ var configurations = url +'api/v1/admin/settings';
         return $http.get(
           'http://maps.googleapis.com/maps/api/geocode/json',
           {params: params}
-        ).then( (response) => {
+        ).then( function(response) {
           $scope.addresses = response.data.results;
         });
       }
     };
 
     $scope.address = {};
-    $scope.$watch('address.selected', (nv) => {
+    $scope.$watch('address.selected', function(nv) {
       // when selected address we initial its to location
       if (nv) {
-        _.each(nv.address_components, (item) => {
+        _.each(nv.address_components, function(item) {
           $scope.streetNumber, $scope.streetName, $scope.city, $scope.state, $scope.country, $scope.zipcode = '';
           if (item.types[0]==='street_number') {
             $scope.product_details.streetNumber = item.long_name;
