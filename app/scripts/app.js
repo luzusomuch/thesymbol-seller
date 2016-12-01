@@ -30,7 +30,7 @@ angular
   // .constant('url', 'http://104.236.48.110:3000/')
 
   // test mode
-  .constant('url', 'http://104.236.38.133:3000/')
+  .constant('url', 'http://192.241.154.223:3000/')
 
   // localhost
   // .constant('url', 'http://localhost:3000/')
