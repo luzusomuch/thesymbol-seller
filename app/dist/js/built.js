@@ -30,14 +30,17 @@ angular
   // .constant('url', 'http://104.236.48.110:3000/')
 
   // test mode
-  .constant('url', 'http://192.241.154.223:3000/')
+  // .constant('url', 'http://192.241.154.223:3000/')
+
+  // our testing server
+  .constant('url', 'http://159.203.165.170:3000/')
 
   // localhost
   // .constant('url', 'http://localhost:3000/')
   
-  .constant('user_url','http://www.thesymbol.store/')
+  .constant('user_url','http://www.ecommercemarketplace.org/')
   .constant('sellers','api/v1/sellers/')
-  .constant('sellers_url','http://seller.thesymbol.store/')
+  .constant('sellers_url','http://seller.ecommercemarketplace.org/')
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
