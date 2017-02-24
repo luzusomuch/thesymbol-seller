@@ -23,15 +23,13 @@ angular.module('ecommercesellerApp')
     }, 3000);
 
       if($routeParams.id){
-        var url_check ="http://the-symbol.net:3000/api/v1/sellers/confirm/"+$routeParams.id;
+        var url_check = url + "api/v1/sellers/confirm/"+$routeParams.id;
         $http.get(url_check).success(function(data){
-             $scope.sign_checked = true;
-             $scope.status = data['status']=='success' ? "success": "danger";
-             $scope.signin_message = data["statusMessage"];
-
+          console.log(data);
+          $scope.sign_checked = true;
+          $scope.status = data['status']=='success' ? "success": "danger";
+          $scope.signin_message = data["statusMessage"];
         });
-
-
       }
 
       var configurations = url +'api/v1/admin/settings';

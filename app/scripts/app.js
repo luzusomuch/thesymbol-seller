@@ -36,12 +36,15 @@ angular
   // .constant('url', 'http://192.241.154.223:3000/')
 
   // our testing server
-  .constant('url', 'http://159.203.165.170:3000/')
-  .constant('user_url','http://www.ecommercemarketplace.org/')
-  .constant('sellers_url','http://seller.ecommercemarketplace.org/')
+  // .constant('url', 'http://159.203.165.170:3000/')
+  // .constant('user_url','http://www.ecommercemarketplace.org/')
+  // .constant('sellers_url','http://seller.ecommercemarketplace.org/')
 
   // localhost
-  // .constant('url', 'http://localhost:3000/')
+  .constant('url', 'http://localhost:3000/')
+  .constant('user_url','http://localhost:9200/')
+  .constant('sellers_url','http://localhost:9100/')
+  
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
