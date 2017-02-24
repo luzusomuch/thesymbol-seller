@@ -34,12 +34,12 @@ angular.module('ecommercesellerApp')
          if(data.data.response.logo){
             $scope.logo_show =data.data.response.logo.cdn.url;
          }else{
-             $scope.logo_show ="http://ecommerce.provenlogic.xyz/default_images/logo.png";
+             $scope.logo_show ="images/img_placeholder_avatar.jpg";
          }
          if(data.data.response.banner){
            $scope.banner_show=data.data.response.banner.cdn.url;
          }else{
-           $scope.banner_show="http://ecommerce.provenlogic.xyz/default_images/logo.png";
+           $scope.banner_show="images/main.png";
          }
 
          $scope.global_name=$scope.sellers.name;
