@@ -314,109 +314,99 @@ var configurations = url +'api/v1/admin/settings';
      });
 
 
-     $scope.submiting = function () {
+    $scope.submiting = function () {
+      if($scope.images.length ==0){
+        $scope.image_message= true;
+        return;
+      }
+      if($scope.product_type == false){
+        var license_new = $scope.prices;
+        var pricing_new =$scope.prices[0];
+        if (pricing_new) {
+          delete pricing_new.error;
+        }
+        var type="digital";
+      }else{
+        var pricing_new = $scope.pricing;
+        var license_new=[];
+      }
 
-       if($scope.images.length ==0){
-         $scope.image_message= true;
-          return;
-       }
-       if($scope.product_type == false){
-         var license_new = $scope.prices;
-         var pricing_new =$scope.prices[0];
-
-         delete pricing_new.error;
-
-          var type="digital";
-       }else{
-
-         var pricing_new = $scope.pricing;
-         var license_new=[];
-
-       }
-       console.log(pricing_new);
-
-       var variant_quantity =$scope.choices;
-       var sum=0;
-       angular.forEach(variant_quantity,function(v,k){
-          sum = sum + parseInt(v["quantity"]);
-        });
+      var variant_quantity =$scope.choices;
+      var sum=0;
+      angular.forEach(variant_quantity,function(v,k){
+        sum = sum + parseInt(v["quantity"]);
+      });
 
       if(parseInt($scope.quantity) < sum){
         $scope.product_error=true;
         $scope.error_message ="Quantity should be same As variant Quantities!!";
-          $(window).scrollTop(0);
-
+        $(window).scrollTop(0);
         return;
       }
-       var product_id = $scope.product_id;
-       var new_url  = url+'api/v1/products/update-product/'+product_id;
-       var authorization = $window.localStorage['Authorization'];
-       var source ="";
-       if($scope.product_type == false){
-         if($scope.source){
-           var source = $scope.source;
-         }else{
-           var source=$scope.product_details.source._id;
-         }
-       }
-
+      var product_id = $scope.product_id;
+      var new_url  = url+'api/v1/products/update-product/'+product_id;
+      var authorization = $window.localStorage['Authorization'];
+      var source ="";
+      if($scope.product_type == false){
+        if($scope.source){
+          var source = $scope.source;
+        } else if($scope.product_details && $scope.product_details.source) {
+          var source=$scope.product_details.source._id;
+        }
+      }
 
       var req = {
-          method: 'PUT',
-          url: new_url,
-          headers: {
-              'Authorization':authorization
-          },
-
-          data: { "source": source,
-                  "type":type,
-                  "product_videos":$scope.product_videos,
-                  "licenses":license_new,
-                  "pricing":pricing_new,
-                  "terms_and_conditions":$scope.product_details.terms_and_conditions,
-                  "long_description":$scope.product_details.long_description,
-                  "meta":$scope.product_details.meta,
-                  "images":$scope.images,
-                  "variants":$scope.variants,
-                  "quantity":$scope.product_details.quantity,
-                  "title":$scope.product_details.title,
-                  "name":$scope.product_details.title,
-                  "category":$scope.product_details.category,
-                  "subcategory":$scope.product_details.sub_category,
-                  'description':$scope.product_details.description,
-                  "price":$scope.main_price,
-                  "weight":$scope.product_details.shipping_details.weight,
-                  "shipping_fee":$scope.shipping_fee,
-                  "ship_duration":$scope.ship_duration,
-                  "paid_by":$scope.paid_by,
-                  streetNumber: $scope.product_details.streetNumber, 
-                  streetName: $scope.product_details.streetName, 
-                  city: $scope.product_details.city, 
-                  state: $scope.product_details.state, 
-                  country: $scope.product_details.country, 
-                  zipcode: $scope.product_details.zipcode, 
-                  lat: $scope.product_details.lat, 
-                  lng: $scope.product_details.lng, 
-                  primesubscription: $scope.product_details.primesubscription
-                }
+        method: 'PUT',
+        url: new_url,
+        headers: {
+          'Authorization':authorization
+        },
+        data: { 
+          "source": source,
+          "type":type,
+          "product_videos":$scope.product_videos,
+          "licenses":license_new,
+          "pricing":pricing_new,
+          "terms_and_conditions":$scope.product_details.terms_and_conditions,
+          "long_description":$scope.product_details.long_description,
+          "meta":$scope.product_details.meta,
+          "images":$scope.images,
+          "variants":$scope.variants,
+          "quantity":$scope.product_details.quantity,
+          "title":$scope.product_details.title,
+          "name":$scope.product_details.title,
+          "category":$scope.product_details.category,
+          "subcategory":$scope.product_details.sub_category,
+          'description':$scope.product_details.description,
+          "price":$scope.main_price,
+          "weight":$scope.product_details.shipping_details.weight,
+          "shipping_fee":$scope.shipping_fee,
+          "ship_duration":$scope.ship_duration,
+          "paid_by":$scope.paid_by,
+          streetNumber: $scope.product_details.streetNumber, 
+          streetName: $scope.product_details.streetName, 
+          city: $scope.product_details.city, 
+          state: $scope.product_details.state, 
+          country: $scope.product_details.country, 
+          zipcode: $scope.product_details.zipcode, 
+          lat: $scope.product_details.lat, 
+          lng: $scope.product_details.lng, 
+          primesubscription: $scope.product_details.primesubscription
         }
-        $http(req).success(function(data){
-            if(data.status =="success"){
-              $scope.product_update =true;
-
-            $(window).scrollTop(0);
-
-            }else{
-              alert("Server errror");
-            }
-        }).error(function(data){
-          $scope.product_error=true;
-          $scope.error_message=data;
-          $(window).scrollTop(0);
-
-        });
-
-     }
+      }
+      $http(req).success(function(data){
+        if(data.status =="success"){
+          $scope.product_update =true;
+        $(window).scrollTop(0);
+        }else{
+          alert("Server errror");
+        }
+      }).error(function(data){
+        $scope.product_error=true;
+        $scope.error_message=data;
+        $(window).scrollTop(0);
+      });
+    }
 
      $scope.calculate_price = function ($index,selection) {
 

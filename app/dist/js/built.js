@@ -35,13 +35,21 @@ angular
   // test mode
   // .constant('url', 'http://192.241.154.223:3000/')
 
-  // our testing server
-  .constant('url', 'http://159.203.165.170:3000/')
-  .constant('user_url','http://www.ecommercemarketplace.org/')
-  .constant('sellers_url','http://seller.ecommercemarketplace.org/')
+  // ecommercemarketplace server
+  // .constant('url', 'http://159.203.165.170:3000/')
+  // .constant('user_url','http://www.ecommercemarketplace.org/')
+  // .constant('sellers_url','http://seller.ecommercemarketplace.org/')
+
+  // ecommercemarketplace server
+  .constant('url', 'http://45.55.205.112:3000/')
+  .constant('user_url','http://www.romaios.com/')
+  .constant('sellers_url','http://seller.romaios.com/')
 
   // localhost
   // .constant('url', 'http://localhost:3000/')
+  // .constant('user_url','http://localhost:9200/')
+  // .constant('sellers_url','http://localhost:9100/')
+  
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -884,12 +892,12 @@ angular.module('ecommercesellerApp')
          if(data.data.response.logo){
             $scope.logo_show =data.data.response.logo.cdn.url;
          }else{
-             $scope.logo_show ="http://ecommerce.provenlogic.xyz/default_images/logo.png";
+             $scope.logo_show ="images/img_placeholder_avatar.jpg";
          }
          if(data.data.response.banner){
            $scope.banner_show=data.data.response.banner.cdn.url;
          }else{
-           $scope.banner_show="http://ecommerce.provenlogic.xyz/default_images/logo.png";
+           $scope.banner_show="images/main.png";
          }
 
          $scope.global_name=$scope.sellers.name;
@@ -2447,15 +2455,13 @@ angular.module('ecommercesellerApp')
     }, 3000);
 
       if($routeParams.id){
-        var url_check ="http://the-symbol.net:3000/api/v1/sellers/confirm/"+$routeParams.id;
+        var url_check = url + "api/v1/sellers/confirm/"+$routeParams.id;
         $http.get(url_check).success(function(data){
-             $scope.sign_checked = true;
-             $scope.status = data['status']=='success' ? "success": "danger";
-             $scope.signin_message = data["statusMessage"];
-
+          console.log(data);
+          $scope.sign_checked = true;
+          $scope.status = data['status']=='success' ? "success": "danger";
+          $scope.signin_message = data["statusMessage"];
         });
-
-
       }
 
       var configurations = url +'api/v1/admin/settings';
