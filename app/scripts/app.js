@@ -50,6 +50,10 @@ angular
   .constant('user_url','http://localhost:9200/')
   .constant('sellers_url','http://localhost:9100/')
   
+  .config(function($locationProvider) {
+    $locationProvider.html5Mode(false);
+    $locationProvider.hashPrefix('!');
+  })
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {

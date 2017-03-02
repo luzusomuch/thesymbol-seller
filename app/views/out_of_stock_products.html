@@ -24,10 +24,10 @@
         <div class="container-fluid clearfix" style="padding:0px;">
            <div class="inner-container">
           <ul class="nav nav-pills col-md-12" style="padding:0px;text-align:center;">
-              <li class="col-md-3" style="padding:0px;margin-left:-1px;"><a class="btn btn-default" data-toggle="pill" href="#/yet_to_be_approved" data-target="#out_of_stock_products">Yet to be Approved</a></li>
-            <li class="col-md-3" style="padding:0px;margin-left:-1px;"><a class="btn btn-default" data-toggle="pill" href="#/product" data-target="#product">Active Products</a></li>
-            <li class="col-md-3" style="padding:0px;margin-left:-1px;"><a class="btn btn-default" data-toggle="pill" href="#/inactive_products" data-target="#inactive_product">Inactive Products</a></li>
-            <li class="active col-md-3" style="padding:0px;margin-left:-1px;"><a class="btn btn-default" data-toggle="pill" hre f="#/out_of_stock_products" data-target="#out_of_stock_products">Out of stock products</a></li>
+              <li class="col-md-3" style="padding:0px;margin-left:-1px;"><a class="btn btn-default" data-toggle="pill" href="#!/yet_to_be_approved" data-target="#out_of_stock_products">Yet to be Approved</a></li>
+            <li class="col-md-3" style="padding:0px;margin-left:-1px;"><a class="btn btn-default" data-toggle="pill" href="#!/product" data-target="#product">Active Products</a></li>
+            <li class="col-md-3" style="padding:0px;margin-left:-1px;"><a class="btn btn-default" data-toggle="pill" href="#!/inactive_products" data-target="#inactive_product">Inactive Products</a></li>
+            <li class="active col-md-3" style="padding:0px;margin-left:-1px;"><a class="btn btn-default" data-toggle="pill" href="#!/out_of_stock_products" data-target="#out_of_stock_products">Out of stock products</a></li>
 
           </ul>
 
@@ -85,7 +85,7 @@
                       <input type="button" class="btn btn-primary" data="{{o._id}}"  ng-click="edit_single_product(o._id)" value="Edit"/>
                       <deactive-link id="o._id"></deactive-link>
                       <delete-link id="o._id"></delete-link>
-                          <a href="{{user_url}}#/product/{{o._id}}" target="_blank">View</a>
+                          <a href="{{user_url}}#!/product/{{o._id}}" target="_blank">View</a>
 
 
                     </div>
@@ -118,7 +118,7 @@
     <div class="col-lg-8 col-xs-12 ">
       <ul>
         <li class="footer_li" ng-repeat ="y in pages">
-            <a target="_blank" href="#/content/{{y._id}}">{{y.name}}</a>
+            <a target="_blank" href="#!/content/{{y._id}}">{{y.name}}</a>
           </li>
 
       </ul>
