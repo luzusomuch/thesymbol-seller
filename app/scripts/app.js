@@ -36,9 +36,9 @@ angular
   // .constant('url', 'http://192.241.154.223:3000/')
 
   // ecommercemarketplace server
-  // .constant('url', 'http://159.203.165.170:3000/')
-  // .constant('user_url','http://www.ecommercemarketplace.org/')
-  // .constant('sellers_url','http://seller.ecommercemarketplace.org/')
+  .constant('url', 'http://159.203.64.172:3000/')
+  .constant('user_url','http://www.ecommercemarketplace.org/')
+  .constant('sellers_url','http://seller.ecommercemarketplace.org/')
 
   // romaios server
   // .constant('url', 'http://45.55.205.112:3000/')
@@ -46,9 +46,9 @@ angular
   // .constant('sellers_url','http://seller.romaios.com/')
 
   // localhost
-  .constant('url', 'http://localhost:3000/')
-  .constant('user_url','http://localhost:9200/')
-  .constant('sellers_url','http://localhost:9100/')
+  // .constant('url', 'http://localhost:3000/')
+  // .constant('user_url','http://localhost:9200/')
+  // .constant('sellers_url','http://localhost:9100/')
   
   .config(function($locationProvider) {
     $locationProvider.html5Mode(false);
