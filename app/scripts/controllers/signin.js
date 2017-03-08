@@ -36,10 +36,7 @@ angular.module('ecommercesellerApp')
       $http.get(configurations).then(function(data){
          if(data['status']=='success'){
            console.log(data['response']['fav_icon']['url']);
-
            $scope.favicon=data['response']['fav_icon']['url'];
-
-
          }
       });
     if($window.localStorage['sign_in_check'] == 'true'){
@@ -61,7 +58,8 @@ angular.module('ecommercesellerApp')
       $window.localStorage['sign_in_check'] = "false";
       $window.localStorage['forgot_password'] = 'false';
       var main_url = url+sellers+"login";
-      $http.post(main_url,{"email":$scope.email,"password":$scope.password}).then(function(data){
+      $http.post(main_url,{"email":$scope.email,"password":$scope.password}).then(function(resp){
+        var data = resp.data;
         if (data['status'] == 'success') {
           console.log(data['response']['status']);
           console.log("f");
@@ -72,9 +70,6 @@ angular.module('ecommercesellerApp')
            $window.localStorage['Authorization']=data['response']['token'];
            $scope.favicon ="images/main.png";
             $location.path('/yet_to_be_approved');
-
-
-
         }else{
           if(data["statusCode"]==500){
               if(data["statusMessage"]=="Invalid Password"){
