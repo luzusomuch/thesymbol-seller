@@ -73,7 +73,7 @@ angular.module('ecommercesellerApp')
          $scope.shipping_message="Only Available In Physical Product";
        }
        var license_url = url +'api/v1/licenses/';
-       $http.get(license_url).success(function(data){
+       $http.get(license_url).then(function(data){
 
            if(data['status']=='success'){
            $scope.licenseOptions = data['response'];
@@ -130,7 +130,7 @@ angular.element(document.querySelector('#fileInput')).on('change',handleFileSele
                    'Content-Type': undefined
                  }
                })
-               .success(function(data) {
+               .then(function(data) {
                  console.log(data.response.url);
                  spinnerService.hide('booksSpinner');
                  $scope.cropArea =true;
@@ -159,7 +159,7 @@ angular.element(document.querySelector('#fileInput')).on('change',handleFileSele
     $scope.sku_check = function (){
 
             var sku_url = url+"api/v1/products/isexist";
-            $http.post(sku_url,{"sku":$scope.sku}).success(function(data){
+            $http.post(sku_url,{"sku":$scope.sku}).then(function(data){
               if(data["response"]["flag"]==true){
                 $scope.sku_msg =true;
 
@@ -190,7 +190,7 @@ angular.element(document.querySelector('#fileInput')).on('change',handleFileSele
 
 
 var configurations = url +'api/v1/admin/settings';
-   $http.get(configurations).success(function(data){
+   $http.get(configurations).then(function(data){
       if(data['status']=='success'){
         $scope.units = data['response']['units'];
         $scope.config_service_tax =data['response']['service_tax'];
@@ -217,7 +217,7 @@ var configurations = url +'api/v1/admin/settings';
      $http(req).then(function(data){
          if(data.data.status =="success"){
            var license_url = url +'api/v1/licenses/';
-           $http.get(license_url).success(function(data){
+           $http.get(license_url).then(function(data){
 
                if(data['status']=='success'){
                $scope.licenseOptions = data['response'];
@@ -294,7 +294,7 @@ var configurations = url +'api/v1/admin/settings';
 
             $scope.product_details.selected_categories
 
-            $http.get(category_url).success(function(data){
+            $http.get(category_url).then(function(data){
                if(data['status']=='success'){
                  $scope.category = data['response']['categories'];
                  $scope.category.forEach(function(item) {
@@ -394,7 +394,7 @@ var configurations = url +'api/v1/admin/settings';
           primesubscription: $scope.product_details.primesubscription
         }
       }
-      $http(req).success(function(data){
+      $http(req).then(function(data){
         if(data.status =="success"){
           $scope.product_update =true;
         $(window).scrollTop(0);
@@ -486,7 +486,7 @@ var configurations = url +'api/v1/admin/settings';
          return;
        }
        var category_url = url+'api/v1/categories/get-approved-categories?parent_id='+$scope.product_details.category;
-        $http.get(category_url).success(function(data){
+        $http.get(category_url).then(function(data){
             $scope.subcategories = data['response']['categories'][0]["children"];
             if(data['response']['categories'][0]["children"].length ==0){
               $scope.subcategory_visible = false;

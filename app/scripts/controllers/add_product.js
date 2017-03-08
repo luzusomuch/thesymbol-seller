@@ -17,7 +17,7 @@ angular.module('ecommercesellerApp')
     var license_url = url +'api/v1/licenses/';
     var primesubscriptionData_url = url + 'api/v1/primesubscriptions';
 
-    $http.get(primesubscriptionData_url).success(function(resp) {
+    $http.get(primesubscriptionData_url).then(function(resp) {
       $scope.primesubscriptionData = resp.response[0];
     });
 
@@ -181,7 +181,7 @@ angular.module('ecommercesellerApp')
                    'Content-Type': undefined
                  }
                })
-               .success(function(data) {
+               .then(function(data) {
 
                  spinnerService.hide('booksSpinner');
                  $scope.cropArea =true;
@@ -205,14 +205,14 @@ angular.module('ecommercesellerApp')
 
 
     //Fetching categories config
-    $http.get(category_url).success(function(data){
+    $http.get(category_url).then(function(data){
         if(data['status']=='success'){
           $scope.category = data['response']['categories'];
 
         }
      });
      //Fetching setting config
-     $http.get(configurations).success(function(data){
+     $http.get(configurations).then(function(data){
         if(data['status']=='success'){
           $scope.units = data['response']['units'];
           $scope.config_service_tax =data['response']['service_tax'];
@@ -227,7 +227,7 @@ angular.module('ecommercesellerApp')
     $scope.sku_msg =false;
     $scope.sku_check = function (){
             var sku_url = url+"api/v1/products/isexist";
-            $http.post(sku_url,{"sku":$scope.sku}).success(function(data){
+            $http.post(sku_url,{"sku":$scope.sku}).then(function(data){
               if(data["response"]["flag"]==true){
                 $scope.sku_msg =true;
 
@@ -245,7 +245,7 @@ angular.module('ecommercesellerApp')
          return;
        }
        var category_url = url+'api/v1/categories/get-approved-categories?parent_id='+$scope.cat;
-        $http.get(category_url).success(function(data){
+        $http.get(category_url).then(function(data){
             $scope.subcategory = data['response']['categories'];
             if($scope.subcategory[0].children.length !=0){
                 $scope.subcategory_visible=true;
@@ -341,7 +341,7 @@ angular.module('ecommercesellerApp')
             lng: $scope.lng, 
             primesubscription: $scope.primesubscription}
         }
-        $http(req).success(function(data){
+        $http(req).then(function(data){
             if(data.status =="success"){
                 $scope.submit=false;
               alert("Product Added Successfully");

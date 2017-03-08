@@ -10,7 +10,7 @@
 angular.module('ecommercesellerApp')
   .controller('ContentCtrl', ['$scope','$http','url','sellers','$window','$routeParams', function($scope,$http,url,sellers,$window,$routeParams) {
     var configurations = url +'api/v1/pages/'+$routeParams.id;
-    $http.get(configurations).success(function(data){
+    $http.get(configurations).then(function(data){
       console.log(data);
        if(data['status']=='success'){
              $scope.content = data['response']['page']['content'];

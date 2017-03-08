@@ -23,7 +23,7 @@ angular.module('ecommercesellerApp')
 
 
         var main_url = url+sellers+"forgotpassword";
-      $http.post(main_url,{"email":$scope.email}).success(function(data){
+      $http.post(main_url,{"email":$scope.email}).then(function(data){
         if (data['status'] == 'success') {
 
           $window.localStorage['forgot_password']='true';

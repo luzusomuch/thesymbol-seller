@@ -21,7 +21,7 @@ angular.module('ecommercesellerApp')
         var uploadUrl=url+"api/v1/images/upload-single-image";
         business_registrationUpload.uploadFileToUrl(file, uploadUrl,function(image){
           $window.localStorage['govt_issue_card']= image;
-          $http.post(main_url,{"name":$scope.name,"email":$scope.email,"address":$scope.address,"password":$scope.password,"phone":$scope.phone,"city":$scope.city,"state":$scope.state,"country":$scope.country,"pincode":$scope.pincode,"govt_issue_card":$window.localStorage['govt_issue_card'],"business_registration":$scope.business_registration}).success(function(data){
+          $http.post(main_url,{"name":$scope.name,"email":$scope.email,"address":$scope.address,"password":$scope.password,"phone":$scope.phone,"city":$scope.city,"state":$scope.state,"country":$scope.country,"pincode":$scope.pincode,"govt_issue_card":$window.localStorage['govt_issue_card'],"business_registration":$scope.business_registration}).then(function(data){
 
             if(data['status'] == 'success'){
              $window.localStorage['sign_in_check']="true";
@@ -52,7 +52,7 @@ angular.module('ecommercesellerApp')
                  headers: {'Content-Type': undefined}
               })
 
-              .success(function(data){
+              .then(function(data){
                if(data['status'] == 'success'){
                  var image_id = data.response._id;
                  cb(data.response._id);

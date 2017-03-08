@@ -17,14 +17,14 @@ angular.module('ecommercesellerApp')
     $("#final_val").val(price);
     }
     var configurations = url +'api/v1/subscriptions';
-    $http.get(configurations).success(function(data){
+    $http.get(configurations).then(function(data){
        if(data['status']=='success'){
          $scope.subscriptions = data['response']
 
        }
     });
     var settings = url +'api/v1/admin/settings';
-    $http.get(settings).success(function(data){
+    $http.get(settings).then(function(data){
        if(data['status']=='success'){
         $("#paypal_mail").val(data['response']['payment_gateway'][0]['email']);
 

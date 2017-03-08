@@ -24,7 +24,7 @@ angular.module('ecommercesellerApp')
 
       if($routeParams.id){
         var url_check = url + "api/v1/sellers/confirm/"+$routeParams.id;
-        $http.get(url_check).success(function(data){
+        $http.get(url_check).then(function(data){
           console.log(data);
           $scope.sign_checked = true;
           $scope.status = data['status']=='success' ? "success": "danger";
@@ -33,7 +33,7 @@ angular.module('ecommercesellerApp')
       }
 
       var configurations = url +'api/v1/admin/settings';
-      $http.get(configurations).success(function(data){
+      $http.get(configurations).then(function(data){
          if(data['status']=='success'){
            console.log(data['response']['fav_icon']['url']);
 
@@ -61,7 +61,7 @@ angular.module('ecommercesellerApp')
       $window.localStorage['sign_in_check'] = "false";
       $window.localStorage['forgot_password'] = 'false';
       var main_url = url+sellers+"login";
-      $http.post(main_url,{"email":$scope.email,"password":$scope.password}).success(function(data){
+      $http.post(main_url,{"email":$scope.email,"password":$scope.password}).then(function(data){
         if (data['status'] == 'success') {
           console.log(data['response']['status']);
           console.log("f");
