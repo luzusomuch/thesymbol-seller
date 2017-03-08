@@ -209,7 +209,8 @@ angular.module('ecommercesellerApp')
                  headers: {'Content-Type': undefined}
               })
 
-              .then(function(data){
+              .then(function(resp){
+                var data = resp.data;
                if(data['status'] == 'success'){
                  var image_id = data.response._id;
                 // $scope.logo_show = data.response.url;

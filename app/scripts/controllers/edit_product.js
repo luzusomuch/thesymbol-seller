@@ -73,8 +73,8 @@ angular.module('ecommercesellerApp')
          $scope.shipping_message="Only Available In Physical Product";
        }
        var license_url = url +'api/v1/licenses/';
-       $http.get(license_url).then(function(data){
-
+       $http.get(license_url).then(function(resp){
+        var data = resp.data;
            if(data['status']=='success'){
            $scope.licenseOptions = data['response'];
            $scope.license_length=$scope.licenseOptions.length;
@@ -130,7 +130,8 @@ angular.element(document.querySelector('#fileInput')).on('change',handleFileSele
                    'Content-Type': undefined
                  }
                })
-               .then(function(data) {
+               .then(function(resp) {
+                var data = resp.data;
                  console.log(data.response.url);
                  spinnerService.hide('booksSpinner');
                  $scope.cropArea =true;
@@ -146,9 +147,8 @@ angular.element(document.querySelector('#fileInput')).on('change',handleFileSele
 
                   $("html, body").animate({ scrollTop: $(document).height() }, 1000);
 
-               })
-               .error(function(data, status) {
-                 console.log(data);
+               }, function(data) {
+                console.log(data.data);
                });
            })
        }
@@ -159,7 +159,8 @@ angular.element(document.querySelector('#fileInput')).on('change',handleFileSele
     $scope.sku_check = function (){
 
             var sku_url = url+"api/v1/products/isexist";
-            $http.post(sku_url,{"sku":$scope.sku}).then(function(data){
+            $http.post(sku_url,{"sku":$scope.sku}).then(function(resp){
+              var data = resp.data;
               if(data["response"]["flag"]==true){
                 $scope.sku_msg =true;
 
@@ -175,7 +176,8 @@ angular.element(document.querySelector('#fileInput')).on('change',handleFileSele
            Upload.upload({
                url:  url+"api/v1/sources/upload",
                data: {source: file}
-           }).then(function (resp) {
+           }).then(function (data) {
+            var resp = data.data;
               $scope.source =resp.data.response._id;
            }, function (resp) {
                console.log('Error status: ' + resp.status);
@@ -190,7 +192,8 @@ angular.element(document.querySelector('#fileInput')).on('change',handleFileSele
 
 
 var configurations = url +'api/v1/admin/settings';
-   $http.get(configurations).then(function(data){
+   $http.get(configurations).then(function(resp){
+      var data = resp.data;
       if(data['status']=='success'){
         $scope.units = data['response']['units'];
         $scope.config_service_tax =data['response']['service_tax'];
@@ -217,8 +220,8 @@ var configurations = url +'api/v1/admin/settings';
      $http(req).then(function(data){
          if(data.data.status =="success"){
            var license_url = url +'api/v1/licenses/';
-           $http.get(license_url).then(function(data){
-
+           $http.get(license_url).then(function(resp){
+            var data = resp.data;
                if(data['status']=='success'){
                $scope.licenseOptions = data['response'];
                $scope.license_length=$scope.licenseOptions.length;
@@ -294,7 +297,8 @@ var configurations = url +'api/v1/admin/settings';
 
             $scope.product_details.selected_categories
 
-            $http.get(category_url).then(function(data){
+            $http.get(category_url).then(function(resp){
+              var data = resp.data;
                if(data['status']=='success'){
                  $scope.category = data['response']['categories'];
                  $scope.category.forEach(function(item) {
@@ -394,16 +398,17 @@ var configurations = url +'api/v1/admin/settings';
           primesubscription: $scope.product_details.primesubscription
         }
       }
-      $http(req).then(function(data){
+      $http(req).then(function(resp){
+        var data = resp.data;
         if(data.status =="success"){
           $scope.product_update =true;
         $(window).scrollTop(0);
         }else{
           alert("Server errror");
         }
-      }).error(function(data){
+      }, function(data) {
         $scope.product_error=true;
-        $scope.error_message=data;
+        $scope.error_message=data.data;
         $(window).scrollTop(0);
       });
     }
@@ -486,7 +491,8 @@ var configurations = url +'api/v1/admin/settings';
          return;
        }
        var category_url = url+'api/v1/categories/get-approved-categories?parent_id='+$scope.product_details.category;
-        $http.get(category_url).then(function(data){
+        $http.get(category_url).then(function(resp){
+          var data = resp.data;
             $scope.subcategories = data['response']['categories'][0]["children"];
             if(data['response']['categories'][0]["children"].length ==0){
               $scope.subcategory_visible = false;

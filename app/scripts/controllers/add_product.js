@@ -17,7 +17,8 @@ angular.module('ecommercesellerApp')
     var license_url = url +'api/v1/licenses/';
     var primesubscriptionData_url = url + 'api/v1/primesubscriptions';
 
-    $http.get(primesubscriptionData_url).then(function(resp) {
+    $http.get(primesubscriptionData_url).then(function(data) {
+      let resp = data.data;
       $scope.primesubscriptionData = resp.response[0];
     });
 
@@ -181,8 +182,8 @@ angular.module('ecommercesellerApp')
                    'Content-Type': undefined
                  }
                })
-               .then(function(data) {
-
+               .then(function(resp) {
+                var data = resp.data;
                  spinnerService.hide('booksSpinner');
                  $scope.cropArea =true;
                  $scope.images.push(data.response);
@@ -193,9 +194,8 @@ angular.module('ecommercesellerApp')
                     $scope.image_icon = false;
                 }
 
-               })
-               .error(function(data, status) {
-                 console.log(data);
+               }, function(err) {
+                console.log(data);
                });
            })
        }
@@ -205,38 +205,36 @@ angular.module('ecommercesellerApp')
 
 
     //Fetching categories config
-    $http.get(category_url).then(function(data){
-        if(data['status']=='success'){
-          $scope.category = data['response']['categories'];
-
-        }
-     });
+    $http.get(category_url).then(function(resp){
+      var data = resp.data;
+      if(data['status']=='success'){
+        $scope.category = data['response']['categories'];
+      }
+    });
      //Fetching setting config
-     $http.get(configurations).then(function(data){
-        if(data['status']=='success'){
-          $scope.units = data['response']['units'];
-          $scope.config_service_tax =data['response']['service_tax'];
-          $scope.config_commission=data['response']['commission'];
-          $scope.ships_in=data['response']['ships_in'];
-          $scope.price_unit=data['response']['price_unit'];
-
-        }
+     $http.get(configurations).then(function(resp){
+      var data = resp.data;
+      if(data['status']=='success'){
+        $scope.units = data['response']['units'];
+        $scope.config_service_tax =data['response']['service_tax'];
+        $scope.config_commission=data['response']['commission'];
+        $scope.ships_in=data['response']['ships_in'];
+        $scope.price_unit=data['response']['price_unit'];
+      }
      });
 
       //Sku validation from server
     $scope.sku_msg =false;
     $scope.sku_check = function (){
-            var sku_url = url+"api/v1/products/isexist";
-            $http.post(sku_url,{"sku":$scope.sku}).then(function(data){
-              if(data["response"]["flag"]==true){
-                $scope.sku_msg =true;
-
-              }else{
-                $scope.sku_msg =false;
-              }
-
-             });
-
+      var sku_url = url+"api/v1/products/isexist";
+      $http.post(sku_url,{"sku":$scope.sku}).then(function(resp){
+        var data = resp.data;
+        if(data["response"]["flag"]==true){
+          $scope.sku_msg =true;
+        }else{
+          $scope.sku_msg =false;
+        }
+      });
     }
 
     //Fetching sub category
@@ -245,17 +243,16 @@ angular.module('ecommercesellerApp')
          return;
        }
        var category_url = url+'api/v1/categories/get-approved-categories?parent_id='+$scope.cat;
-        $http.get(category_url).then(function(data){
-            $scope.subcategory = data['response']['categories'];
-            if($scope.subcategory[0].children.length !=0){
-                $scope.subcategory_visible=true;
-            }else{
-                $scope.subcategory_visible=false;
-            }
-            $scope.sub_cat = "";
-
+        $http.get(category_url).then(function(resp){
+          var data = resp.data;
+          $scope.subcategory = data['response']['categories'];
+          if($scope.subcategory[0].children.length !=0){
+            $scope.subcategory_visible=true;
+          }else{
+            $scope.subcategory_visible=false;
+          }
+          $scope.sub_cat = "";
          });
-
      }
 
      $scope.submiting = function () {
@@ -341,20 +338,20 @@ angular.module('ecommercesellerApp')
             lng: $scope.lng, 
             primesubscription: $scope.primesubscription}
         }
-        $http(req).then(function(data){
-            if(data.status =="success"){
-                $scope.submit=false;
-              alert("Product Added Successfully");
+        $http(req).then(function(resp){
+          var data = resp.data;
+          if(data.status =="success"){
+            $scope.submit=false;
+            alert("Product Added Successfully");
             $location.path('yet_to_be_approved');
-            }else{
-              alert("Sever Error Please Add Again");
+          }else{
+            alert("Sever Error Please Add Again");
             }
-          }).error(function(data){
-              console.log(data);
-              $scope.product_error=true;
-              $scope.error_message=data;
-              $(window).scrollTop(0);
-
+          }, function(data) {
+            console.log(data);
+            $scope.product_error=true;
+            $scope.error_message=data.data;
+            $(window).scrollTop(0);
           });
         }
 
@@ -363,7 +360,8 @@ angular.module('ecommercesellerApp')
                Upload.upload({
                    url:  url+"api/v1/sources/upload",
                    data: {source: file}
-               }).then(function (resp) {
+               }).then(function (data) {
+                var resp = data.data;
                    $scope.source =resp.data.response._id;
                }, function (resp) {
                    console.log('Error status: ' + resp.status);
