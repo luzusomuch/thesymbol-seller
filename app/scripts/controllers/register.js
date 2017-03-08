@@ -51,7 +51,8 @@ angular.module('ecommercesellerApp')
               $http.post(uploadUrl, fd, {
                  transformRequest: angular.identity,
                  headers: {'Content-Type': undefined}
-              }).then(function(data){
+              }).then(function(resp){
+                var data = resp.data;
                 if(data['status'] == 'success'){
                   var image_id = data.response._id;
                   cb(data.response._id);
