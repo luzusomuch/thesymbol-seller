@@ -22,8 +22,8 @@ angular.module('ecommercesellerApp')
         business_registrationUpload.uploadFileToUrl(file, uploadUrl,function(image){
           $window.localStorage['govt_issue_card']= image;
           $http.post(main_url,{"name":$scope.name,"email":$scope.email,"address":$scope.address,"password":$scope.password,"phone":$scope.phone,"city":$scope.city,"state":$scope.state,"country":$scope.country,"pincode":$scope.pincode,"govt_issue_card":$window.localStorage['govt_issue_card'],"business_registration":$scope.business_registration}).then(function(resp){
-            console.log(data);
             var data = resp.data;
+            console.log(data);
             if(data['status'] == 'success'){
              $window.localStorage['sign_in_check']="true";
               $location.path('seller');
