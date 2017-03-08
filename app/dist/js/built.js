@@ -36,20 +36,24 @@ angular
   // .constant('url', 'http://192.241.154.223:3000/')
 
   // ecommercemarketplace server
-  // .constant('url', 'http://159.203.165.170:3000/')
-  // .constant('user_url','http://www.ecommercemarketplace.org/')
-  // .constant('sellers_url','http://seller.ecommercemarketplace.org/')
+  .constant('url', 'http://159.203.64.172:3000/')
+  .constant('user_url','http://www.ecommercemarketplace.org/')
+  .constant('sellers_url','http://seller.ecommercemarketplace.org/')
 
-  // ecommercemarketplace server
-  .constant('url', 'http://45.55.205.112:3000/')
-  .constant('user_url','http://www.romaios.com/')
-  .constant('sellers_url','http://seller.romaios.com/')
+  // romaios server
+  // .constant('url', 'http://45.55.205.112:3000/')
+  // .constant('user_url','http://www.romaios.com/')
+  // .constant('sellers_url','http://seller.romaios.com/')
 
   // localhost
   // .constant('url', 'http://localhost:3000/')
   // .constant('user_url','http://localhost:9200/')
   // .constant('sellers_url','http://localhost:9100/')
   
+  .config(function($locationProvider) {
+    $locationProvider.html5Mode(false);
+    $locationProvider.hashPrefix('!');
+  })
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -330,7 +334,8 @@ angular.module('ecommercesellerApp')
     var license_url = url +'api/v1/licenses/';
     var primesubscriptionData_url = url + 'api/v1/primesubscriptions';
 
-    $http.get(primesubscriptionData_url).success(function(resp) {
+    $http.get(primesubscriptionData_url).then(function(data) {
+      let resp = data.data;
       $scope.primesubscriptionData = resp.response[0];
     });
 
@@ -494,8 +499,8 @@ angular.module('ecommercesellerApp')
                    'Content-Type': undefined
                  }
                })
-               .success(function(data) {
-
+               .then(function(resp) {
+                var data = resp.data;
                  spinnerService.hide('booksSpinner');
                  $scope.cropArea =true;
                  $scope.images.push(data.response);
@@ -506,9 +511,8 @@ angular.module('ecommercesellerApp')
                     $scope.image_icon = false;
                 }
 
-               })
-               .error(function(data, status) {
-                 console.log(data);
+               }, function(err) {
+                console.log(data);
                });
            })
        }
@@ -518,38 +522,36 @@ angular.module('ecommercesellerApp')
 
 
     //Fetching categories config
-    $http.get(category_url).success(function(data){
-        if(data['status']=='success'){
-          $scope.category = data['response']['categories'];
-
-        }
-     });
+    $http.get(category_url).then(function(resp){
+      var data = resp.data;
+      if(data['status']=='success'){
+        $scope.category = data['response']['categories'];
+      }
+    });
      //Fetching setting config
-     $http.get(configurations).success(function(data){
-        if(data['status']=='success'){
-          $scope.units = data['response']['units'];
-          $scope.config_service_tax =data['response']['service_tax'];
-          $scope.config_commission=data['response']['commission'];
-          $scope.ships_in=data['response']['ships_in'];
-          $scope.price_unit=data['response']['price_unit'];
-
-        }
+     $http.get(configurations).then(function(resp){
+      var data = resp.data;
+      if(data['status']=='success'){
+        $scope.units = data['response']['units'];
+        $scope.config_service_tax =data['response']['service_tax'];
+        $scope.config_commission=data['response']['commission'];
+        $scope.ships_in=data['response']['ships_in'];
+        $scope.price_unit=data['response']['price_unit'];
+      }
      });
 
       //Sku validation from server
     $scope.sku_msg =false;
     $scope.sku_check = function (){
-            var sku_url = url+"api/v1/products/isexist";
-            $http.post(sku_url,{"sku":$scope.sku}).success(function(data){
-              if(data["response"]["flag"]==true){
-                $scope.sku_msg =true;
-
-              }else{
-                $scope.sku_msg =false;
-              }
-
-             });
-
+      var sku_url = url+"api/v1/products/isexist";
+      $http.post(sku_url,{"sku":$scope.sku}).then(function(resp){
+        var data = resp.data;
+        if(data["response"]["flag"]==true){
+          $scope.sku_msg =true;
+        }else{
+          $scope.sku_msg =false;
+        }
+      });
     }
 
     //Fetching sub category
@@ -558,17 +560,16 @@ angular.module('ecommercesellerApp')
          return;
        }
        var category_url = url+'api/v1/categories/get-approved-categories?parent_id='+$scope.cat;
-        $http.get(category_url).success(function(data){
-            $scope.subcategory = data['response']['categories'];
-            if($scope.subcategory[0].children.length !=0){
-                $scope.subcategory_visible=true;
-            }else{
-                $scope.subcategory_visible=false;
-            }
-            $scope.sub_cat = "";
-
+        $http.get(category_url).then(function(resp){
+          var data = resp.data;
+          $scope.subcategory = data['response']['categories'];
+          if($scope.subcategory[0].children.length !=0){
+            $scope.subcategory_visible=true;
+          }else{
+            $scope.subcategory_visible=false;
+          }
+          $scope.sub_cat = "";
          });
-
      }
 
      $scope.submiting = function () {
@@ -654,20 +655,20 @@ angular.module('ecommercesellerApp')
             lng: $scope.lng, 
             primesubscription: $scope.primesubscription}
         }
-        $http(req).success(function(data){
-            if(data.status =="success"){
-                $scope.submit=false;
-              alert("Product Added Successfully");
+        $http(req).then(function(resp){
+          var data = resp.data;
+          if(data.status =="success"){
+            $scope.submit=false;
+            alert("Product Added Successfully");
             $location.path('yet_to_be_approved');
-            }else{
-              alert("Sever Error Please Add Again");
+          }else{
+            alert("Sever Error Please Add Again");
             }
-          }).error(function(data){
-              console.log(data);
-              $scope.product_error=true;
-              $scope.error_message=data;
-              $(window).scrollTop(0);
-
+          }, function(data) {
+            console.log(data);
+            $scope.product_error=true;
+            $scope.error_message=data.data;
+            $(window).scrollTop(0);
           });
         }
 
@@ -676,7 +677,8 @@ angular.module('ecommercesellerApp')
                Upload.upload({
                    url:  url+"api/v1/sources/upload",
                    data: {source: file}
-               }).then(function (resp) {
+               }).then(function (data) {
+                var resp = data.data;
                    $scope.source =resp.data.response._id;
                }, function (resp) {
                    console.log('Error status: ' + resp.status);
@@ -847,9 +849,9 @@ angular.module('ecommercesellerApp')
 angular.module('ecommercesellerApp')
   .controller('ContentCtrl', ['$scope','$http','url','sellers','$window','$routeParams', function($scope,$http,url,sellers,$window,$routeParams) {
     var configurations = url +'api/v1/pages/'+$routeParams.id;
-    $http.get(configurations).success(function(data){
-      console.log(data);
-       if(data['status']=='success'){
+    $http.get(configurations).then(function(resp){
+      var data = resp.data;
+       if(data.data['status']=='success'){
              $scope.content = data['response']['page']['content'];
 
        }
@@ -1067,7 +1069,8 @@ angular.module('ecommercesellerApp')
                  headers: {'Content-Type': undefined}
               })
 
-              .success(function(data){
+              .then(function(resp){
+                var data = resp.data;
                if(data['status'] == 'success'){
                  var image_id = data.response._id;
                 // $scope.logo_show = data.response.url;
@@ -1194,8 +1197,8 @@ angular.module('ecommercesellerApp')
          $scope.shipping_message="Only Available In Physical Product";
        }
        var license_url = url +'api/v1/licenses/';
-       $http.get(license_url).success(function(data){
-
+       $http.get(license_url).then(function(resp){
+        var data = resp.data;
            if(data['status']=='success'){
            $scope.licenseOptions = data['response'];
            $scope.license_length=$scope.licenseOptions.length;
@@ -1251,7 +1254,8 @@ angular.element(document.querySelector('#fileInput')).on('change',handleFileSele
                    'Content-Type': undefined
                  }
                })
-               .success(function(data) {
+               .then(function(resp) {
+                var data = resp.data;
                  console.log(data.response.url);
                  spinnerService.hide('booksSpinner');
                  $scope.cropArea =true;
@@ -1267,9 +1271,8 @@ angular.element(document.querySelector('#fileInput')).on('change',handleFileSele
 
                   $("html, body").animate({ scrollTop: $(document).height() }, 1000);
 
-               })
-               .error(function(data, status) {
-                 console.log(data);
+               }, function(data) {
+                console.log(data.data);
                });
            })
        }
@@ -1280,7 +1283,8 @@ angular.element(document.querySelector('#fileInput')).on('change',handleFileSele
     $scope.sku_check = function (){
 
             var sku_url = url+"api/v1/products/isexist";
-            $http.post(sku_url,{"sku":$scope.sku}).success(function(data){
+            $http.post(sku_url,{"sku":$scope.sku}).then(function(resp){
+              var data = resp.data;
               if(data["response"]["flag"]==true){
                 $scope.sku_msg =true;
 
@@ -1296,7 +1300,8 @@ angular.element(document.querySelector('#fileInput')).on('change',handleFileSele
            Upload.upload({
                url:  url+"api/v1/sources/upload",
                data: {source: file}
-           }).then(function (resp) {
+           }).then(function (data) {
+            var resp = data.data;
               $scope.source =resp.data.response._id;
            }, function (resp) {
                console.log('Error status: ' + resp.status);
@@ -1311,7 +1316,8 @@ angular.element(document.querySelector('#fileInput')).on('change',handleFileSele
 
 
 var configurations = url +'api/v1/admin/settings';
-   $http.get(configurations).success(function(data){
+   $http.get(configurations).then(function(resp){
+      var data = resp.data;
       if(data['status']=='success'){
         $scope.units = data['response']['units'];
         $scope.config_service_tax =data['response']['service_tax'];
@@ -1338,8 +1344,8 @@ var configurations = url +'api/v1/admin/settings';
      $http(req).then(function(data){
          if(data.data.status =="success"){
            var license_url = url +'api/v1/licenses/';
-           $http.get(license_url).success(function(data){
-
+           $http.get(license_url).then(function(resp){
+            var data = resp.data;
                if(data['status']=='success'){
                $scope.licenseOptions = data['response'];
                $scope.license_length=$scope.licenseOptions.length;
@@ -1415,7 +1421,8 @@ var configurations = url +'api/v1/admin/settings';
 
             $scope.product_details.selected_categories
 
-            $http.get(category_url).success(function(data){
+            $http.get(category_url).then(function(resp){
+              var data = resp.data;
                if(data['status']=='success'){
                  $scope.category = data['response']['categories'];
                  $scope.category.forEach(function(item) {
@@ -1435,109 +1442,100 @@ var configurations = url +'api/v1/admin/settings';
      });
 
 
-     $scope.submiting = function () {
+    $scope.submiting = function () {
+      if($scope.images.length ==0){
+        $scope.image_message= true;
+        return;
+      }
+      if($scope.product_type == false){
+        var license_new = $scope.prices;
+        var pricing_new =$scope.prices[0];
+        if (pricing_new) {
+          delete pricing_new.error;
+        }
+        var type="digital";
+      }else{
+        var pricing_new = $scope.pricing;
+        var license_new=[];
+      }
 
-       if($scope.images.length ==0){
-         $scope.image_message= true;
-          return;
-       }
-       if($scope.product_type == false){
-         var license_new = $scope.prices;
-         var pricing_new =$scope.prices[0];
-
-         delete pricing_new.error;
-
-          var type="digital";
-       }else{
-
-         var pricing_new = $scope.pricing;
-         var license_new=[];
-
-       }
-       console.log(pricing_new);
-
-       var variant_quantity =$scope.choices;
-       var sum=0;
-       angular.forEach(variant_quantity,function(v,k){
-          sum = sum + parseInt(v["quantity"]);
-        });
+      var variant_quantity =$scope.choices;
+      var sum=0;
+      angular.forEach(variant_quantity,function(v,k){
+        sum = sum + parseInt(v["quantity"]);
+      });
 
       if(parseInt($scope.quantity) < sum){
         $scope.product_error=true;
         $scope.error_message ="Quantity should be same As variant Quantities!!";
-          $(window).scrollTop(0);
-
+        $(window).scrollTop(0);
         return;
       }
-       var product_id = $scope.product_id;
-       var new_url  = url+'api/v1/products/update-product/'+product_id;
-       var authorization = $window.localStorage['Authorization'];
-       var source ="";
-       if($scope.product_type == false){
-         if($scope.source){
-           var source = $scope.source;
-         }else{
-           var source=$scope.product_details.source._id;
-         }
-       }
-
+      var product_id = $scope.product_id;
+      var new_url  = url+'api/v1/products/update-product/'+product_id;
+      var authorization = $window.localStorage['Authorization'];
+      var source ="";
+      if($scope.product_type == false){
+        if($scope.source){
+          var source = $scope.source;
+        } else if($scope.product_details && $scope.product_details.source) {
+          var source=$scope.product_details.source._id;
+        }
+      }
 
       var req = {
-          method: 'PUT',
-          url: new_url,
-          headers: {
-              'Authorization':authorization
-          },
-
-          data: { "source": source,
-                  "type":type,
-                  "product_videos":$scope.product_videos,
-                  "licenses":license_new,
-                  "pricing":pricing_new,
-                  "terms_and_conditions":$scope.product_details.terms_and_conditions,
-                  "long_description":$scope.product_details.long_description,
-                  "meta":$scope.product_details.meta,
-                  "images":$scope.images,
-                  "variants":$scope.variants,
-                  "quantity":$scope.product_details.quantity,
-                  "title":$scope.product_details.title,
-                  "name":$scope.product_details.title,
-                  "category":$scope.product_details.category,
-                  "subcategory":$scope.product_details.sub_category,
-                  'description':$scope.product_details.description,
-                  "price":$scope.main_price,
-                  "weight":$scope.product_details.shipping_details.weight,
-                  "shipping_fee":$scope.shipping_fee,
-                  "ship_duration":$scope.ship_duration,
-                  "paid_by":$scope.paid_by,
-                  streetNumber: $scope.product_details.streetNumber, 
-                  streetName: $scope.product_details.streetName, 
-                  city: $scope.product_details.city, 
-                  state: $scope.product_details.state, 
-                  country: $scope.product_details.country, 
-                  zipcode: $scope.product_details.zipcode, 
-                  lat: $scope.product_details.lat, 
-                  lng: $scope.product_details.lng, 
-                  primesubscription: $scope.product_details.primesubscription
-                }
+        method: 'PUT',
+        url: new_url,
+        headers: {
+          'Authorization':authorization
+        },
+        data: { 
+          "source": source,
+          "type":type,
+          "product_videos":$scope.product_videos,
+          "licenses":license_new,
+          "pricing":pricing_new,
+          "terms_and_conditions":$scope.product_details.terms_and_conditions,
+          "long_description":$scope.product_details.long_description,
+          "meta":$scope.product_details.meta,
+          "images":$scope.images,
+          "variants":$scope.variants,
+          "quantity":$scope.product_details.quantity,
+          "title":$scope.product_details.title,
+          "name":$scope.product_details.title,
+          "category":$scope.product_details.category,
+          "subcategory":$scope.product_details.sub_category,
+          'description':$scope.product_details.description,
+          "price":$scope.main_price,
+          "weight":$scope.product_details.shipping_details.weight,
+          "shipping_fee":$scope.shipping_fee,
+          "ship_duration":$scope.ship_duration,
+          "paid_by":$scope.paid_by,
+          streetNumber: $scope.product_details.streetNumber, 
+          streetName: $scope.product_details.streetName, 
+          city: $scope.product_details.city, 
+          state: $scope.product_details.state, 
+          country: $scope.product_details.country, 
+          zipcode: $scope.product_details.zipcode, 
+          lat: $scope.product_details.lat, 
+          lng: $scope.product_details.lng, 
+          primesubscription: $scope.product_details.primesubscription
         }
-        $http(req).success(function(data){
-            if(data.status =="success"){
-              $scope.product_update =true;
-
-            $(window).scrollTop(0);
-
-            }else{
-              alert("Server errror");
-            }
-        }).error(function(data){
-          $scope.product_error=true;
-          $scope.error_message=data;
-          $(window).scrollTop(0);
-
-        });
-
-     }
+      }
+      $http(req).then(function(resp){
+        var data = resp.data;
+        if(data.status =="success"){
+          $scope.product_update =true;
+        $(window).scrollTop(0);
+        }else{
+          alert("Server errror");
+        }
+      }, function(data) {
+        $scope.product_error=true;
+        $scope.error_message=data.data;
+        $(window).scrollTop(0);
+      });
+    }
 
      $scope.calculate_price = function ($index,selection) {
 
@@ -1617,7 +1615,8 @@ var configurations = url +'api/v1/admin/settings';
          return;
        }
        var category_url = url+'api/v1/categories/get-approved-categories?parent_id='+$scope.product_details.category;
-        $http.get(category_url).success(function(data){
+        $http.get(category_url).then(function(resp){
+          var data = resp.data;
             $scope.subcategories = data['response']['categories'][0]["children"];
             if(data['response']['categories'][0]["children"].length ==0){
               $scope.subcategory_visible = false;
@@ -1707,7 +1706,8 @@ var configurations = url +'api/v1/admin/settings';
 angular.module('ecommercesellerApp')
   .controller('FooterCtrl',['$scope','$http','url','sellers','$window', function($scope,$http,url,sellers,$window) {
     var configurations = url +'api/v1/pages';
-    $http.get(configurations).success(function(data){
+    $http.get(configurations).then(function(resp){
+    	var data = resp.data;
        if(data['status']=='success'){
          $scope.pages = data['response']['pages'];
 
@@ -1738,10 +1738,9 @@ angular.module('ecommercesellerApp')
       $scope.user = angular.copy($scope.master);
     };
     $scope.submit = function () {
-
-
-        var main_url = url+sellers+"forgotpassword";
-      $http.post(main_url,{"email":$scope.email}).success(function(data){
+      var main_url = url+sellers+"forgotpassword";
+      $http.post(main_url,{"email":$scope.email}).then(function(resp){
+        var data = resp.data;
         if (data['status'] == 'success') {
 
           $window.localStorage['forgot_password']='true';
@@ -2386,8 +2385,9 @@ angular.module('ecommercesellerApp')
         var uploadUrl=url+"api/v1/images/upload-single-image";
         business_registrationUpload.uploadFileToUrl(file, uploadUrl,function(image){
           $window.localStorage['govt_issue_card']= image;
-          $http.post(main_url,{"name":$scope.name,"email":$scope.email,"address":$scope.address,"password":$scope.password,"phone":$scope.phone,"city":$scope.city,"state":$scope.state,"country":$scope.country,"pincode":$scope.pincode,"govt_issue_card":$window.localStorage['govt_issue_card'],"business_registration":$scope.business_registration}).success(function(data){
-
+          $http.post(main_url,{"name":$scope.name,"email":$scope.email,"address":$scope.address,"password":$scope.password,"phone":$scope.phone,"city":$scope.city,"state":$scope.state,"country":$scope.country,"pincode":$scope.pincode,"govt_issue_card":$window.localStorage['govt_issue_card'],"business_registration":$scope.business_registration}).then(function(resp){
+            var data = resp.data;
+            console.log(data);
             if(data['status'] == 'success'){
              $window.localStorage['sign_in_check']="true";
               $location.path('seller');
@@ -2415,16 +2415,13 @@ angular.module('ecommercesellerApp')
               $http.post(uploadUrl, fd, {
                  transformRequest: angular.identity,
                  headers: {'Content-Type': undefined}
-              })
-
-              .success(function(data){
-               if(data['status'] == 'success'){
-                 var image_id = data.response._id;
-                 cb(data.response._id);
-               }
-              })
-
-              .error(function(data){
+              }).then(function(resp){
+                var data = resp.data;
+                if(data['status'] == 'success'){
+                  var image_id = data.response._id;
+                  cb(data.response._id);
+                }
+              }, function(error) {
                 alert("Server error");
               });
             }
@@ -2456,7 +2453,7 @@ angular.module('ecommercesellerApp')
 
       if($routeParams.id){
         var url_check = url + "api/v1/sellers/confirm/"+$routeParams.id;
-        $http.get(url_check).success(function(data){
+        $http.get(url_check).then(function(data){
           console.log(data);
           $scope.sign_checked = true;
           $scope.status = data['status']=='success' ? "success": "danger";
@@ -2465,13 +2462,10 @@ angular.module('ecommercesellerApp')
       }
 
       var configurations = url +'api/v1/admin/settings';
-      $http.get(configurations).success(function(data){
+      $http.get(configurations).then(function(data){
          if(data['status']=='success'){
            console.log(data['response']['fav_icon']['url']);
-
            $scope.favicon=data['response']['fav_icon']['url'];
-
-
          }
       });
     if($window.localStorage['sign_in_check'] == 'true'){
@@ -2493,7 +2487,8 @@ angular.module('ecommercesellerApp')
       $window.localStorage['sign_in_check'] = "false";
       $window.localStorage['forgot_password'] = 'false';
       var main_url = url+sellers+"login";
-      $http.post(main_url,{"email":$scope.email,"password":$scope.password}).success(function(data){
+      $http.post(main_url,{"email":$scope.email,"password":$scope.password}).then(function(resp){
+        var data = resp.data;
         if (data['status'] == 'success') {
           console.log(data['response']['status']);
           console.log("f");
@@ -2504,9 +2499,6 @@ angular.module('ecommercesellerApp')
            $window.localStorage['Authorization']=data['response']['token'];
            $scope.favicon ="images/main.png";
             $location.path('/yet_to_be_approved');
-
-
-
         }else{
           if(data["statusCode"]==500){
               if(data["statusMessage"]=="Invalid Password"){
@@ -2547,14 +2539,16 @@ angular.module('ecommercesellerApp')
     $("#final_val").val(price);
     }
     var configurations = url +'api/v1/subscriptions';
-    $http.get(configurations).success(function(data){
+    $http.get(configurations).then(function(resp){
+      var data = resp.data;
        if(data['status']=='success'){
          $scope.subscriptions = data['response']
 
        }
     });
     var settings = url +'api/v1/admin/settings';
-    $http.get(settings).success(function(data){
+    $http.get(settings).then(function(resp){
+      var data = resp.data;
        if(data['status']=='success'){
         $("#paypal_mail").val(data['response']['payment_gateway'][0]['email']);
 

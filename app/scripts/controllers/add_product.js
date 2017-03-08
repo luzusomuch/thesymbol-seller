@@ -18,7 +18,7 @@ angular.module('ecommercesellerApp')
     var primesubscriptionData_url = url + 'api/v1/primesubscriptions';
 
     $http.get(primesubscriptionData_url).then(function(data) {
-      let resp = data.data;
+      var resp = data.data;
       $scope.primesubscriptionData = resp.response[0];
     });
 
