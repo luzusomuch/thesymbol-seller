@@ -37,12 +37,12 @@ angular
 
   // ecommercemarketplace server
   .constant('url', 'http://159.203.64.172:3000/')
-  .constant('user_url','http://www.ecommercemarketplace.org/')
+  .constant('user_url','http://ecommercemarketplace.org/')
   .constant('sellers_url','http://seller.ecommercemarketplace.org/')
 
   // romaios server
   // .constant('url', 'http://45.55.205.112:3000/')
-  // .constant('user_url','http://www.romaios.com/')
+  // .constant('user_url','http://romaios.com/')
   // .constant('sellers_url','http://seller.romaios.com/')
 
   // localhost
@@ -335,7 +335,7 @@ angular.module('ecommercesellerApp')
     var primesubscriptionData_url = url + 'api/v1/primesubscriptions';
 
     $http.get(primesubscriptionData_url).then(function(data) {
-      let resp = data.data;
+      var resp = data.data;
       $scope.primesubscriptionData = resp.response[0];
     });
 
